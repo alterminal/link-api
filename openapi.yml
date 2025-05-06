@@ -117,6 +117,102 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+  /spaces:
+    post:
+      tags:
+        - space
+      summary: Create Space
+      description: Create Space
+      operationId: createSpace
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSpaceReq"
+      responses:
+        "201":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Space"
+    get:
+      tags:
+        - space
+      summary: Get Spaces
+      description: Get Spaces
+      operationId: listSpaces
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+        - name: parentId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Space"
+  /spaces/{id}:
+    get:
+      tags:
+        - space
+      summary: Get Space
+      description: Get Space
+      operationId: getSpace
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Space"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+    delete:
+      tags:
+        - space
+      summary: Delete Space
+      description: Delete Space
+      operationId: deleteSpace
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "204":
+          description: successful operation
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
 components:
   securitySchemes:
     BearerAuth:
@@ -175,6 +271,43 @@ components:
       required:
         - email
         - password
+    Space:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+      required:
+        - id
+        - name
+    SpaceList:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        total:
+          type: integer
+        list:
+          type: array
+          items:
+            $ref: "#/components/schemas/Space"
+    CreateSpaceReq:
+      type: object
+      properties:
+        name:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+      required:
+        - name
   parameters:
     id:
       name: id

@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: Link Apis
+  contact:
+    email: chenyunda218@gmail.com
+  version: 1.0.40
+servers:
+  - url: http://localhost:8080
+    description: dev
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: account
+  - name: space
+  - name: auth
+paths:
+  /verifications-codes:
+    post:
+      tags:
+        - auth
+      summary: Create verification code
+      description: Create verification code
+      operationId: createVerificationCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVerificationCodeReq"
+      responses:
+        "204":
+          description: successful operation
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "429":
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /accounts:
+    post:
+      tags:
+        - account
+      summary: Create account
+      description: Create account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccountReq"
+      responses:
+        "204":
+          description: successful operation
+        "403":
+          description: Verification code is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /accounts/sessions:
+    post:
+      tags:
+        - account
+      summary: Login
+      description: Login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginReq"
+      responses:
+        "201":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /accounts/me:
+    get:
+      tags:
+        - account
+      summary: Get all accounts
+      description: Get all accounts
+      operationId: listAccounts
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    AccountType:
+      type: string
+      enum:
+        - user
+        - admin
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        type:
+          $ref: "#/components/schemas/AccountType"
+    LoginReq:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResp:
+      type: object
+      properties:
+        token:
+          type: string
+    CreateVerificationCodeReq:
+      type: object
+      properties:
+        email:
+          type: string
+    CreateAccountReq:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        verificationCode:
+          type: string
+      required:
+        - email
+        - password
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string

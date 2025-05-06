@@ -5,7 +5,7 @@ info:
     email: chenyunda218@gmail.com
   version: 1.0.40
 servers:
-  - url: http://localhost:8080
+  - url: https://space.api.uat.alterminal.com
     description: dev
 
 security:
@@ -60,6 +60,12 @@ paths:
       responses:
         "204":
           description: successful operation
+        "409":
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
         "403":
           description: Verification code is invalid
           content:
@@ -101,7 +107,7 @@ paths:
         - account
       summary: Get all accounts
       description: Get all accounts
-      operationId: listAccounts
+      operationId: getMe
       security:
         - BearerAuth: []
       responses:

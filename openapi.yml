@@ -15,6 +15,7 @@ tags:
   - name: account
   - name: space
   - name: auth
+  - name: role
 paths:
   /verifications-codes:
     post:
@@ -211,6 +212,94 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
+  /spaces/{id}/roles:
+    get:
+      tags:
+        - role
+      summary: Get Roles by Space ID
+      description: Get Roles by Space ID
+      operationId: listRoles
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+    post:
+      tags:
+        - role
+      summary: Create Role
+      description: Create Role
+      operationId: createRole
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRoleReq"
+      responses:
+        "201":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+  /roles/{roleId}:
+    get:
+      tags:
+        - role
+      summary: Get Roles
+      description: Get Roles
+      operationId: getRoles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+    delete:
+      tags:
+        - role
+      summary: Delete Role
+      description: Delete Role
+      operationId: deleteRole
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: successful operation
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
 components:
   securitySchemes:
     BearerAuth:
@@ -306,6 +395,34 @@ components:
           format: uuid
       required:
         - name
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+      required:
+        - id
+        - name
+    Permission:
+      type: object
+      properties:
+        method:
+          type: string
+        url:
+          type: string
+      required:
+        - method
+        - url
+    CreateRoleReq:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
   parameters:
     id:
       name: id

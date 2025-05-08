@@ -7,6 +7,8 @@ info:
 servers:
   - url: https://space.api.uat.alterminal.com
     description: dev
+  - url: https://space.api.alterminal.com
+    description: prd
 
 security:
   - BearerAuth: []
@@ -264,6 +266,8 @@ paths:
       operationId: createRole
       security:
         - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/spaceId"
       requestBody:
         content:
           application/json:

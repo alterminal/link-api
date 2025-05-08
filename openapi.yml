@@ -73,6 +73,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
+  /accounts/password:
+    put:
+      tags:
+        - account
+      summary: Update password
+      description: Update password
+      operationId: updatePassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordReq"
+      responses:
+        "204":
+          description: successful operation
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
   /accounts/sessions:
     post:
       tags:
@@ -339,7 +363,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
-  /roles/{roleId}/subscriptions:
+  /roles/{roleId}/subscription-tiers:
     post:
       tags:
         - role
@@ -349,7 +373,46 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - name: roleId
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Permission"
+    get:
+      tags:
+        - role
+      summary: Get Permissions by Role ID
+      description: Get Permissions by Role ID
+      operationId: listSubscriptionsTiers
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionTier"
+  /subscription-tiers/{tierId}:
+    get:
+      tags:
+        - role
+      summary: Get Subscription Tier
+      description: Get Subscription Tier
+      operationId: getSubscriptionTier
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: tierId
           in: path
           required: true
           schema:
@@ -361,9 +424,35 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Permission"
+                $ref: "#/components/schemas/SubscriptionTier"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /subscription-tiers/{tierId}/payments:
+    post:
+      tags:
+        - role
+      summary: Create Subscription Tier
+      description: Create Subscription Tier
+      operationId: createSubscriptionTierPayment
+      security:
+        - BearerAuth: []
+      responses:
+        "201":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionTier"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
 components:
   securitySchemes:
     BearerAuth:
@@ -393,6 +482,20 @@ components:
           type: string
         type:
           $ref: "#/components/schemas/AccountType"
+    ResetPasswordReq:
+      type: object
+      properties:
+        email:
+          type: string
+        oldPassword:
+          type: string
+        password:
+          type: string
+        verificationCode:
+          type: string
+      required:
+        - email
+        - password
     LoginReq:
       type: object
       properties:
@@ -510,20 +613,30 @@ components:
           type: string
         provider:
           $ref: "#/components/schemas/PaymentGatewayProvider"
+    SubscriptionMode:
+      type: string
+      enum:
+        - single
+        - multiple
     CreateSubscriptionTierReq:
       type: object
       properties:
         title:
           type: string
-        role:
-          $ref: "#/components/schemas/Role"
         price:
           type: number
         currency:
           type: string
+        mode:
+          $ref: "#/components/schemas/SubscriptionMode"
+        paymentGatewayId:
+          type: string
+          format: uuid
       required:
         - title
         - role
+        - mode
+        - paymentGatewayId
     SubscriptionTier:
       type: object
       properties:
@@ -545,3 +658,10 @@ components:
       required: true
       schema:
         type: string
+    roleId:
+      name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid

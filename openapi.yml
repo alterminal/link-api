@@ -363,6 +363,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
+  /roles/{roleId}/members:
+    get:
+      tags:
+        - role
+      summary: Get Members by Role ID
+      description: Get Members by Role ID
+      operationId: listMembers
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/roleId"
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: size
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              $ref: "#/components/schemas/AccountList"
   /roles/{roleId}/subscription-tiers:
     post:
       tags:
@@ -440,6 +465,15 @@ paths:
       operationId: createSubscriptionTierPayment
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
       responses:
         "201":
           description: successful operation
@@ -482,6 +516,19 @@ components:
           type: string
         type:
           $ref: "#/components/schemas/AccountType"
+    AccountList:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        total:
+          type: integer
+        list:
+          type: array
+          items:
+            $ref: "#/components/schemas/Account"
     ResetPasswordReq:
       type: object
       properties:

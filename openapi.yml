@@ -405,6 +405,11 @@ paths:
         - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/roleId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubscriptionTierReq"
       responses:
         "200":
           description: successful operation
@@ -677,7 +682,7 @@ components:
         title:
           type: string
         price:
-          type: number
+          type: integer
         currency:
           type: string
         mode:

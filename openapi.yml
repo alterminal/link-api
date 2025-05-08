@@ -241,7 +241,6 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        required: true
         content:
           application/json:
             schema:
@@ -253,6 +252,46 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Role"
+  /spaces/{id}/payment-gateways:
+    get:
+      tags:
+        - payment
+      summary: Get Payment Gateways
+      description: Get Payment Gateways
+      operationId: listPaymentGateways
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentGateway"
+    post:
+      tags:
+        - payment
+      summary: Create Payment Gateway
+      description: Create Payment Gateway
+      operationId: createPaymentGateway
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentGatewayReq"
+      responses:
+        "201":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentGateway"
   /roles/{roleId}:
     get:
       tags:
@@ -300,6 +339,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
+  /roles/{roleId}/subscriptions:
+    post:
+      tags:
+        - role
+      summary: Get Permissions by Role ID
+      description: Get Permissions by Role ID
+      operationId: listPermissions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Permission"
 components:
   securitySchemes:
     BearerAuth:
@@ -423,6 +487,57 @@ components:
           type: string
       required:
         - title
+    PaymentGatewayProvider:
+      type: string
+      enum:
+        - stripe
+    CreatePaymentGatewayReq:
+      type: object
+      properties:
+        provider:
+          $ref: "#/components/schemas/PaymentGatewayProvider"
+        title:
+          type: string
+        key:
+          type: string
+    PaymentGateway:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        provider:
+          $ref: "#/components/schemas/PaymentGatewayProvider"
+    CreateSubscriptionTierReq:
+      type: object
+      properties:
+        title:
+          type: string
+        role:
+          $ref: "#/components/schemas/Role"
+        price:
+          type: number
+        currency:
+          type: string
+      required:
+        - title
+        - role
+    SubscriptionTier:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        role:
+          $ref: "#/components/schemas/Role"
+        price:
+          type: number
+        currency:
+          type: string
   parameters:
     id:
       name: id

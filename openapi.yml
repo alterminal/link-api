@@ -306,6 +306,8 @@ paths:
       summary: Create Payment Gateway
       description: Create Payment Gateway
       operationId: createPaymentGateway
+      parameters:
+        - $ref: "#/components/parameters/spaceId"
       security:
         - BearerAuth: []
       requestBody:

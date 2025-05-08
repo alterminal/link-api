@@ -177,7 +177,7 @@ paths:
           in: query
           schema:
             type: integer
-        - name: pageSize
+        - name: size
           in: query
           schema:
             type: integer
@@ -193,7 +193,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SpaceList"
-  /spaces/{id}:
+  /spaces/{spaceId}:
     get:
       tags:
         - space
@@ -203,7 +203,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/id"
+        - $ref: "#/components/parameters/spaceId"
       responses:
         "200":
           description: successful operation
@@ -236,7 +236,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
-  /spaces/{id}/roles:
+  /spaces/{spaceId}/roles:
     get:
       tags:
         - role
@@ -246,7 +246,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/id"
+        - $ref: "#/components/parameters/spaceId"
       responses:
         "200":
           description: successful operation
@@ -276,7 +276,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Role"
-  /spaces/{id}/payment-gateways:
+  /spaces/{spaceId}/payment-gateways:
     get:
       tags:
         - payment
@@ -286,7 +286,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/id"
+        - $ref: "#/components/parameters/spaceId"
       responses:
         "200":
           description: successful operation
@@ -707,6 +707,13 @@ components:
         type: string
     roleId:
       name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    spaceId:
+      name: spaceId
       in: path
       required: true
       schema:

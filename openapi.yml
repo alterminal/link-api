@@ -690,11 +690,24 @@ components:
         paymentGatewayId:
           type: string
           format: uuid
+        interval:
+          $ref: "#/components/schemas/SubscriptionInterval"
+        intervalMode:
+          $ref: "#/components/schemas/SubscriptionIntervalMode"
       required:
         - title
         - role
         - mode
         - paymentGatewayId
+    SubscriptionIntervalMode:
+      type: string
+      enum:
+        - whole_month
+        - real_time
+    SubscriptionInterval:
+      type: string
+      enum:
+        - month
     SubscriptionTier:
       type: object
       properties:
@@ -709,6 +722,10 @@ components:
           type: number
         currency:
           type: string
+        interval:
+          $ref: "#/components/schemas/SubscriptionInterval"
+        intervalMode:
+          $ref: "#/components/schemas/SubscriptionIntervalMode"
   parameters:
     id:
       name: id

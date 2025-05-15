@@ -476,6 +476,13 @@ paths:
       operationId: createSubscriptionTierPayment
       security:
         - BearerAuth: []
+      parameters:
+        - name: tierId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:

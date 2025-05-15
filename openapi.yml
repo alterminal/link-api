@@ -498,7 +498,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SubscriptionTier"
+                $ref: "#/components/schemas/SubscriptionPaymentSession"
         "404":
           description: Not Found
           content:
@@ -733,6 +733,15 @@ components:
           $ref: "#/components/schemas/SubscriptionInterval"
         intervalMode:
           $ref: "#/components/schemas/SubscriptionIntervalMode"
+    SubscriptionPaymentSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
   parameters:
     id:
       name: id

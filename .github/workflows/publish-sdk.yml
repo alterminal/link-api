@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
-          scope: "@universalmacro"
+          scope: "@alterminal"
       - name: Publish
         run: |
           cd typescript-fetch-client

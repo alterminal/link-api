@@ -104,7 +104,7 @@ paths:
       tags:
         - account
       summary: Login
-      description: Login
+      description: Create Login session
       operationId: login
       requestBody:
         required: true

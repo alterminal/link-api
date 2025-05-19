@@ -6,7 +6,7 @@ on:
     branches:
       - "main"
 env:
-  NPM_PACKAGE: "link-api"
+  NPM_PACKAGE: "@alterminal/link-api"
 
 jobs:
   generate-angular-client:

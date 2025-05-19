@@ -5,4 +5,5 @@
 - Role - Role是角色的抽像，Role必定屬於Space，以物業管理系統為例子，Role可作為某個單位的住戶，Account可以透過訂閱成為Role。
 - Account - Account是帳號，用於鍳權，每個Account可以屬於多個Role。
 - SubscriptionTier - 訂閱套餐對應某個Role，有單人訂閱和多人訂閱模式，單人訂閱模式有人訂閱後其他人無法訂閱。用戶可以𨘋過訂閱成為角色。
+- PaymentGateway - 支付通道，SubscriptionTier必須綁定一個支付通道用於創建支付。
 ## 物業管理系統

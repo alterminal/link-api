@@ -393,7 +393,8 @@ paths:
           description: successful operation
           content:
             application/json:
-              $ref: "#/components/schemas/AccountList"
+              schema:
+                $ref: "#/components/schemas/AccountList"
   /roles/{roleId}/subscription-tiers:
     post:
       tags:

@@ -1,0 +1,39 @@
+name: Publish TS SDK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+env:
+  PACKAGE_NAME: "@alterminal/link-api"
+  WECOM_WEBHOOK_URL: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=f683698e-9790-42ef-a2be-25486a98e117"
+jobs:
+  generate-typescript-client:
+    runs-on: ubuntu-latest
+    name: Publish TS SDK
+    steps:
+      # Checkout your code
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Typescript Client
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          openapi-file: swagger.yml
+          generator: typescript-fetch
+          config-file: swagger-ts-config.yml
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          scope: "@universalmacro"
+      - name: Publish
+        run: |
+          cd typescript-fetch-client
+          npm version `npm view ${{ env.PACKAGE_NAME }} version` --no-git-tag-version
+          npm version --preid=alpha prerelease --no-git-tag-version
+          npm publish
+          lastVersion=`node -p "require('./package.json').version"`
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
